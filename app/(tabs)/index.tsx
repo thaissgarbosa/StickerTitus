@@ -1,8 +1,11 @@
 import { View, StyleSheet } from "react-native";
-import ImageViewer from "@/components/ImageViewer";
-import Button from "@/components/Button";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
+
+import ImageViewer from "@/components/ImageViewer";
+import Button from "@/components/Button";
+import IconButton from "@/components/IconButtons";
+import CircleButton from "@/components/CircleButton";
 
 const PlaceholderImage = require("@/assets/images/background-image.jpg");
 
@@ -38,7 +41,13 @@ export default function Index() {
       </View>
 
       {showAppOptions ? (
-        <View />
+        <View>
+          <View>
+            <IconButton icon="refresh" label="Reset" onPress={() => {}}/>
+              <CircleButton onPress={() => {}}/>
+            <IconButton icon="save-alt" label="Save" onPress={() => {}}/>
+          </View>
+        </View>
       ) : (
         <View style={styles.footerContainer}>
           <Button
