@@ -1,9 +1,8 @@
 import { View, StyleSheet } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-
 import ImageViewer from "@/components/ImageViewer";
 import Button from "@/components/Button";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 import IconButton from "@/components/IconButtons";
 import CircleButton from "@/components/CircleButton";
 
@@ -13,7 +12,6 @@ export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
-
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
 
   const pickImageAsync = async () => {
@@ -27,9 +25,15 @@ export default function Index() {
       setSelectedImage(result.assets[0].uri);
       setShowAppOptions(true);
     } else {
-      alert("You did not select any image");
+      alert("You did not select any image.");
     }
   };
+
+  const onReset = () => {
+    setShowAppOptions(false);
+  };
+  const onAddSticker = () => {};
+  const onSaveImageAsync = async () => {};
 
   return (
     <View style={styles.container}>
@@ -41,11 +45,15 @@ export default function Index() {
       </View>
 
       {showAppOptions ? (
-        <View>
-          <View>
-            <IconButton icon="refresh" label="Reset" onPress={() => {}}/>
-              <CircleButton onPress={() => {}}/>
-            <IconButton icon="save-alt" label="Save" onPress={() => {}}/>
+        <View style={styles.optionsContainer}>
+          <View style={styles.optionsRow}>
+            <IconButton icon="refresh" label="Reset" onPress={onReset} />
+            <CircleButton onPress={onAddSticker} />
+            <IconButton
+              icon="save-alt"
+              label="Save"
+              onPress={onSaveImageAsync}
+            />
           </View>
         </View>
       ) : (
@@ -79,5 +87,13 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1 / 3,
     alignItems: "center",
+  },
+  optionsContainer: {
+    position: "absolute",
+    bottom: 80,
+  },
+  optionsRow: {
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
