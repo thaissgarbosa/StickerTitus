@@ -1,8 +1,9 @@
 import { View, StyleSheet } from "react-native";
-import ImageViewer from "@/components/ImageViewer";
-import Button from "@/components/Button";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
+
+import ImageViewer from "@/components/ImageViewer";
+import Button from "@/components/Button";
 import IconButton from "@/components/IconButtons";
 import CircleButton from "@/components/CircleButton";
 import EmojiPicker from "@/components/EmojiPicker";
@@ -40,12 +41,9 @@ export default function Index() {
   };
 
   const onModalClose = () => {
-    setShowModal (false);
-  }
-  const onSaveImageAsync = async () => {
-
+    setShowModal(false);
   };
-
+  const onSaveImageAsync = async () => {};
 
   return (
     <View style={styles.container}>
