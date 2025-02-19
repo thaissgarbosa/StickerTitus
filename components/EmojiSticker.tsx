@@ -1,6 +1,10 @@
 import { ImageSource } from "expo-image";
-import { View } from "react-native";
-import Animated, {AnimatedStyle, useAnimatedStyle , useSharedValue , withSpring,} from "react-native-reanimated";
+import Animated, {
+  AnimatedStyle,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 type Props = {
@@ -10,6 +14,8 @@ type Props = {
 
 export default function EmojiSticker({ imageSize, stickerSource }: Props) {
   const scaleImage = useSharedValue(imageSize);
+  const translateEx = useSharedValue(0);
+  const translateY = useSharedValue(0);
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
@@ -21,22 +27,42 @@ export default function EmojiSticker({ imageSize, stickerSource }: Props) {
       }
     });
 
-    const imageStyle = useAnimatedStyle (() => {
-        return{
-            width: withSpring(scaleImage.value),
-            height: withSpring(scaleImage.value),
-        };
-    });
+  const imageStyle = useAnimatedStyle(() => {
+    return {
+      width: withSpring(scaleImage.value),
+      height: withSpring(scaleImage.value),
+    };
+  });
+
+  const drag = Gesture.Pan().onChange((event) => {
+    translateEx.value += event.changeX;
+    translateY.value += event.changeY;
+  });
+
+  const containerStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: translateEx.value,
+        },
+        {
+          translateY: translateY.value,
+        },
+      ],
+    };
+  });
 
   return (
-    <View style={{ top: -350 }}>
-        <GestureDetector gesture={doubleTap}>
-      <Animated.Image
-        source={stickerSource}
-        style={[imageStyle, { width: imageSize, height: imageSize }]}
-        resizeMode="contain"
-      />
+    <GestureDetector gesture={drag}>
+    <Animated.View style={[containerStyle,{ top: -350 }]}>
+      <GestureDetector gesture={doubleTap}>
+        <Animated.Image
+          source={stickerSource}
+          style={[imageStyle, { width: imageSize, height: imageSize }]}
+          resizeMode="contain"
+        />
       </GestureDetector>
-    </View>
+    </Animated.View>
+    </GestureDetector>
   );
 }
