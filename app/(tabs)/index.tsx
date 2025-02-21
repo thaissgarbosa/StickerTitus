@@ -1,10 +1,11 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform, PlatformColor } from "react-native";
 import { useState, useRef } from "react"; // hooks do react
 import { type ImageSource } from "expo-image";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
+import domtoimgae from "dom-to-image";
 
 import ImageViewer from "@/components/ImageViewer";
 import Button from "@/components/Button";
@@ -61,18 +62,35 @@ export default function Index() {
   };
 
   const onSaveImageAsync = async () => {
-    try {
-      const localUri = await captureRef(imageRef, {
-        height: 440,
-        quality: 1,
-      });
+    if (Platform.OS !== "web") {
+      try {
+        const localUri = await captureRef(imageRef, {
+          height: 440,
+          quality: 1,
+        });
 
-      await MediaLibrary.saveToLibraryAsync(localUri);
-      if (localUri) {
-        alert("Saved!");
+        await MediaLibrary.saveToLibraryAsync(localUri);
+        if (localUri) {
+          alert("Saved!");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+          // @ts-ignore
+        const dataUrl = await domtoimgae.toJpeg(imageRef.current, {
+          quality: 0.95,
+          width: 320,
+          height: 440,
+        });
+        let link = document.createElement("a");
+        link.download = "sticker-titus.jpeg";
+        link.href = dataUrl;
+        link.click();
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
